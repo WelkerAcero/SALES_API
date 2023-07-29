@@ -5,7 +5,7 @@ CREATE TABLE `Customers` (
     `name` VARCHAR(20) NULL,
     `lastname` VARCHAR(20) NULL,
     `address` VARCHAR(100) NULL,
-    `cellphone` VARCHAR(10) NULL,
+    `cellphone` VARCHAR(16) NULL,
     `createdAt` DATETIME NOT NULL DEFAULT NOW(),
     `updatedAt` DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 
@@ -20,8 +20,8 @@ CREATE TABLE `Sellers` (
     `name` VARCHAR(20) NULL,
     `lastname` VARCHAR(20) NULL,
     `address` VARCHAR(100) NULL,
-    `cellphone` VARCHAR(10) NULL,
-    `birthday` DATETIME(3) NOT NULL,
+    `cellphone` VARCHAR(16) NULL,
+    `birthday` VARCHAR(10) NOT NULL,
     `email` VARCHAR(10) NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT NOW(),
     `updatedAt` DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
@@ -36,9 +36,11 @@ CREATE TABLE `Sales` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `customer_id` INTEGER NOT NULL,
     `seller_id` INTEGER NOT NULL,
+    `sale_code` VARCHAR(20) NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT NOW(),
     `updatedAt` DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 
+    UNIQUE INDEX `Sales_sale_code_key`(`sale_code`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -56,9 +58,10 @@ CREATE TABLE `Categories` (
 CREATE TABLE `Providers` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `rut` VARCHAR(10) NOT NULL,
-    `name` VARCHAR(20) NULL,
+    `name` VARCHAR(20) NOT NULL,
     `address` VARCHAR(100) NULL,
-    `cellphone` VARCHAR(10) NULL,
+    `cellphone` VARCHAR(16) NULL,
+    `url_web` VARCHAR(1000) NULL,
     `createdAt` DATETIME NOT NULL DEFAULT NOW(),
     `updatedAt` DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 
@@ -81,7 +84,7 @@ CREATE TABLE `Products` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `branch_office_id` INTEGER NOT NULL,
     `provider_id` INTEGER NOT NULL,
-    `categories_id` INTEGER NOT NULL,
+    `category_id` INTEGER NOT NULL,
     `name` VARCHAR(20) NOT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
     `stock` INTEGER NOT NULL,
@@ -94,11 +97,10 @@ CREATE TABLE `Products` (
 -- CreateTable
 CREATE TABLE `SaleDetails` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `sale_id` INTEGER NOT NULL,
+    `sale_code` VARCHAR(191) NOT NULL,
     `product_id` INTEGER NOT NULL,
     `quantity` INTEGER NOT NULL,
     `sub_total` DECIMAL(10, 2) NOT NULL,
-    `total` DECIMAL(10, 2) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -116,10 +118,10 @@ ALTER TABLE `Products` ADD CONSTRAINT `Products_branch_office_id_fkey` FOREIGN K
 ALTER TABLE `Products` ADD CONSTRAINT `Products_provider_id_fkey` FOREIGN KEY (`provider_id`) REFERENCES `Providers`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Products` ADD CONSTRAINT `Products_categories_id_fkey` FOREIGN KEY (`categories_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Products` ADD CONSTRAINT `Products_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SaleDetails` ADD CONSTRAINT `SaleDetails_sale_id_fkey` FOREIGN KEY (`sale_id`) REFERENCES `Sales`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `SaleDetails` ADD CONSTRAINT `SaleDetails_sale_code_fkey` FOREIGN KEY (`sale_code`) REFERENCES `Sales`(`sale_code`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `SaleDetails` ADD CONSTRAINT `SaleDetails_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `Products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

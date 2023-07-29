@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export class BranchOfficeController extends BranchOfficeModel {
+    
     getBranchOffices  = async (req: Request, res: Response): Promise<Response> => {
         try {
             return res.status(200).json(await this.all());
@@ -24,7 +25,9 @@ export class BranchOfficeController extends BranchOfficeModel {
     getBranchOffice = async (req: Request, res: Response): Promise<Response> => {
         try {
             const id = parseInt(req.params.id);
-            return res.json(await this.where('id', id).get());
+            if (id) return res.json(await this.where('id', id).get()); 
+            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la 
+            siguiente manera: https://_URL_/52`} });
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }

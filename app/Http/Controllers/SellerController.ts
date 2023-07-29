@@ -24,7 +24,9 @@ export class SellerController extends SellerModel {
     getSeller = async (req: Request, res: Response): Promise<Response> => {
         try {
             const id = parseInt(req.params.id);
-            return res.json(await this.where('id', id).get());
+            if (id) return res.json(await this.where('id', id).get()); 
+            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la 
+            siguiente manera: https://_URL_/52`} });
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }

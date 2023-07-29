@@ -44,8 +44,9 @@ model Sales {
   Sellers   Sellers @relation(fields: [seller_id], references: [id]) // no se ve como campo, solo se registra la relación
   seller_id Int
 
-  createdAt     DateTime        @default(dbgenerated("NOW()")) @db.DateTime
-  updatedAt     DateTime        @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  sale_code     String        @unique @db.VarChar(10)
+  createdAt     DateTime      @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt     DateTime      @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
   Sales_Details SaleDetails[]
 }
 
@@ -63,7 +64,7 @@ model Providers {
   name      String     @db.VarChar(20)
   address   String?    @db.VarChar(100)
   cellphone String?    @db.VarChar(16)
-  url_web String?      @db.VarChar(1000)
+  url_web   String?    @db.VarChar(1000)
   Products  Products[] // 1:m 
   createdAt DateTime   @default(dbgenerated("NOW()")) @db.DateTime
   updatedAt DateTime   @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
@@ -86,28 +87,27 @@ model Products {
   Providers   Providers @relation(fields: [provider_id], references: [id]) // no se ve como campo, solo se registra la relación
   provider_id Int
 
-  Categories    Categories @relation(fields: [category_id], references: [id]) // no se ve como campo, solo se registra la relación
+  Categories  Categories @relation(fields: [category_id], references: [id]) // no se ve como campo, solo se registra la relación
   category_id Int
 
   name  String  @db.VarChar(20)
   price Decimal @db.Decimal(10, 2)
-  stock Int     
+  stock Int     @db.SmallInt
 
-  createdAt     DateTime        @default(dbgenerated("NOW()")) @db.DateTime
-  updatedAt     DateTime        @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  createdAt     DateTime      @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt     DateTime      @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
   Sales_Details SaleDetails[] // 1:m 
 }
 
 model SaleDetails {
   id Int @id @default(autoincrement())
 
-  Sales   Sales @relation(fields: [sale_id], references: [id]) // no se ve como campo, solo se registra la relación
-  sale_id Int
+  Sales   Sales  @relation(fields: [sale_id], references: [sale_code]) // no se ve como campo, solo se registra la relación
+  sale_id String @map("sale_code") @db.VarChar(10)
 
   Products   Products @relation(fields: [product_id], references: [id]) // no se ve como campo, solo se registra la relación
   product_id Int
 
-  quantity  Int
+  quantity  Int     @db.SmallInt
   sub_total Decimal @db.Decimal(10, 2)
-  bill_code String  @db.VarChar(20)
 }
