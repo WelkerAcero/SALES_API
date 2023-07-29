@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { SaleDetailsModel } from "../../Models/SaleDetailsModel";
 import dotenv from "dotenv";
 import { DB } from '../../helpers/DB';
+import { randomFill } from "crypto";
 dotenv.config();
 
 export class SaleDetailController extends SaleDetailsModel {
@@ -12,6 +13,25 @@ export class SaleDetailController extends SaleDetailsModel {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
     };
+
+    provideBillCode = async (): Promise<string> => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const codeLength = 11; // Longitud del código deseado
+        let code = '';
+        let repeat = false;
+        do {
+          code = '';
+          for (let i = 0; i < codeLength; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            code += characters[randomIndex];
+          }
+        
+          const verifyExistence: any = await DB.table('SaleDetails').where('bill_code', code).get();
+          if(verifyExistence) repeat = true;
+        } while (repeat);
+        
+        return code;
+      }
 
     storeSaleDetail = async (req: Request, res: Response): Promise<any> => {
         try {
@@ -30,7 +50,7 @@ export class SaleDetailController extends SaleDetailsModel {
                 product_id: product_id,
                 quantity: quantity,
                 sub_total: parseFloat(sub_total),
-                bill_code: "BC-262151_t"
+                bill_code: this.provideBillCode()
             }
 
             console.log('Data to store:', dataToStore);
