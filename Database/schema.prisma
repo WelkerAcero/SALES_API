@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Customers {
+  id        Int      @id @default(autoincrement())
+  rut       String   @unique @db.VarChar(10)
+  name      String?  @db.VarChar(20)
+  lastname  String?  @db.VarChar(20)
+  address   String?  @db.VarChar(100)
+  cellphone String?  @db.VarChar(16)
+  Sales     Sales[] // 1:m 
+  createdAt DateTime @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+}
+
+model Sellers {
+  id        Int      @id @default(autoincrement())
+  rut       String   @unique @db.VarChar(10)
+  name      String?  @db.VarChar(20)
+  lastname  String?  @db.VarChar(20)
+  address   String?  @db.VarChar(100)
+  cellphone String?  @db.VarChar(16)
+  birthday  String   @db.VarChar(10)
+  email     String   @unique @db.VarChar(10)
+  Sales     Sales[] // 1:m 
+  createdAt DateTime @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+}
+
+model Sales {
+  id          Int       @id @default(autoincrement())
+  Customers   Customers @relation(fields: [customer_id], references: [id]) // no se ve como campo, solo se registra la relación
+  customer_id Int
+
+  Sellers   Sellers @relation(fields: [seller_id], references: [id]) // no se ve como campo, solo se registra la relación
+  seller_id Int
+
+  createdAt     DateTime        @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt     DateTime        @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  Sales_Details SaleDetails[]
+}
+
+model Categories {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(20)
+  createdAt DateTime   @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime   @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  Products  Products[]
+}
+
+model Providers {
+  id        Int        @id @default(autoincrement())
+  rut       String     @unique @db.VarChar(10)
+  name      String     @db.VarChar(20)
+  address   String?    @db.VarChar(100)
+  cellphone String?    @db.VarChar(16)
+  url_web String?      @db.VarChar(1000)
+  Products  Products[] // 1:m 
+  createdAt DateTime   @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime   @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+}
+
+model BranchOffices {
+  id        Int        @id @default(autoincrement())
+  country   String     @db.VarChar(20)
+  createdAt DateTime   @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt DateTime   @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  Products  Products[] // 1:m 
+}
+
+model Products {
+  id Int @id @default(autoincrement())
+
+  Branch_Offices   BranchOffices @relation(fields: [branch_office_id], references: [id]) // no se ve como campo, solo se registra la relación
+  branch_office_id Int
+
+  Providers   Providers @relation(fields: [provider_id], references: [id]) // no se ve como campo, solo se registra la relación
+  provider_id Int
+
+  Categories    Categories @relation(fields: [category_id], references: [id]) // no se ve como campo, solo se registra la relación
+  category_id Int
+
+  name  String  @db.VarChar(20)
+  price Decimal @db.Decimal(10, 2)
+  stock Int     
+
+  createdAt     DateTime        @default(dbgenerated("NOW()")) @db.DateTime
+  updatedAt     DateTime        @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.DateTime
+  Sales_Details SaleDetails[] // 1:m 
+}
+
+model SaleDetails {
+  id Int @id @default(autoincrement())
+
+  Sales   Sales @relation(fields: [sale_id], references: [id]) // no se ve como campo, solo se registra la relación
+  sale_id Int
+
+  Products   Products @relation(fields: [product_id], references: [id]) // no se ve como campo, solo se registra la relación
+  product_id Int
+
+  quantity  Int
+  sub_total Decimal @db.Decimal(10, 2)
+  bill_code String  @db.VarChar(20)
+}
