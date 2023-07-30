@@ -38,12 +38,21 @@ npm i nodemon
 Instalar el ORM de Prisma: v ^5.0.0
 ================================================================
 npm install prisma@^5.0.0 --save-dev
-npx prisma
 npx prisma init --datasource-provider mysql
+================================================================
+El comando [npx prisma init --datasource-provider mysql]
+crea una carpeta Prisma, ESTA CARPETA DEBE ELIMINARSE. 
+Al clonar el repositorio nos provee de una Carpeta Database que
+contiene el schema.prisma con toda la modelación.
+================================================================
 
-Crear una carpeta Database y dentro irá schema.prisma
+MIGRAR BASE DE DATOS MEDIANTE PRISMA:
+      1. Se debe tener la base de datos creada con el nombre sales_api.
+      2. El archivo .env debe contener: DATABASE_URL="mysql://root:CLAVE_DE_LA_DB@localhost:3306/sales_api"
+      3. correr el comando: npm run migrate
 
-npx prisma migrate dev --name init --schema=./Database/schema.prisma   => migrate
+Al correr el último comando, sera igual que ejecutar: 
+npx prisma migrate dev --name init --schema=./Database/schema.prisma
 =================================================================
 Se Instala Módulo de Yargs para crear modelos y controladores 
 mediante comando de consola de forma automática:
