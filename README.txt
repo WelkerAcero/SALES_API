@@ -49,9 +49,9 @@ contiene el schema.prisma con toda la modelación.
 MIGRAR BASE DE DATOS MEDIANTE PRISMA:
       1. Se debe tener la base de datos creada con el nombre sales_api. Cotejamiento por defecto
       2. El archivo .env debe contener: DATABASE_URL="mysql://root:CLAVE_DE_LA_DB@localhost:3306/sales_api"
-      3. correr el comando: npm run migrate
+      3. Correr el comando: npm run migrate
 
-Al correr el último comando, sera igual que ejecutar: 
+Al correr el último comando, será igual que ejecutar: 
 npx prisma migrate dev --name init --schema=./Database/schema.prisma
 =================================================================
 Se Instala Módulo de Yargs para crear modelos y controladores 
@@ -70,6 +70,7 @@ desarrollo:
 =================================================================
 npm install --save-dev cross-env@7.0.3
 =================================================================
+EN CASO DE HABER BAJADO LOS CAMBIOS DE GIT, PUEDE SALTAR ESTE PASO.
 2. En el archivo package.json, se debe modificar el script "model" para 
 utilizar cross-env y la variable de entorno. 
 
@@ -82,8 +83,8 @@ ${NOMBRE_VARIABLE} para referenciar la variable en el script:
 Para asegurar de que el contenido del archivo Model.ts se genere con el 
 formato correcto y esté correctamente indentado, puedes utilizar el método 
 prettier para formatear el código automáticamente:
-===========================================================================
-npm install --save-dev prettier@2.8.8 => VERSIÓN: "prettier": "^2.8.8",
+
+npm install --save-dev prettier@2.8.8 
 ===========================================================================
 
 INSTALARA POLITICA DE CORS PARA EXPONER API:
