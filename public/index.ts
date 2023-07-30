@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import response_time from "response-time";
 import cors from "cors";
-import ngrok from "ngrok";
+/* import ngrok from "ngrok"; */
 import customerRoutes from "../routes/api/CustomerRoute";
 import sellerRoutes from "../routes/api/SellerRoute";
 import salesRoutes from "../routes/api/SaleRoute";
@@ -22,7 +22,7 @@ export default class MyServer {
     this._app.use(BodyParser.urlencoded({ extended: true }));
     this._app.use(cors({
       credentials: true,
-      origin: "http://127.0.0.1:5173" // our front-end
+      origin: "http://127.0.0.1:5173" // for a future front-end
     }));
   }
 
@@ -45,19 +45,19 @@ export default class MyServer {
     });
   }
 
-  async ngrokConnection(): Promise<any> {
+/*   async ngrokConnection(): Promise<any> {
     ngrok.disconnect("ma2w1wkc");
     ngrok.kill();
     const url = await ngrok.connect({
-      id: "rd_2PiMfCMk0kLlbTdJOkn0oJJluq9",
+      id: "",
       proto: "http", // http|tcp|tls, defaults to http
       addr: 3000,
-      domain: "ma2w1wkc.ngrok.app",
-      subdomain: "ma2w1wkc",
+      domain: "",
+      subdomain: "",
     });
 
     return console.log(`This is the route generated: ${url}`);
-  }
+  } */
 }
 new MyServer().listen();
-new MyServer().ngrokConnection();
+/* new MyServer().ngrokConnection(); */
