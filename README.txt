@@ -91,3 +91,9 @@ INSTALARA POLITICA DE CORS PARA EXPONER API:
 ===========================================================================
 npm install cors
 ===========================================================================
+
+Nodemon:
+YA PUEDES EJECUTAR: npm run dev 
+
+En caso de no haberlo instalado nodemon:
+node ./public/index.ts"
