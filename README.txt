@@ -87,7 +87,7 @@ prettier para formatear el código automáticamente:
 npm install --save-dev prettier@2.8.8 
 ===========================================================================
 
-INSTALARA POLITICA DE CORS PARA EXPONER API:
+INSTALAR POLÍTICA DE CORS PARA EXPONER API:
 ===========================================================================
 npm install cors
 ===========================================================================
