@@ -1,7 +1,7 @@
 import { Model } from "./Model";
 export class ProviderModel extends Model {
   private targetDbTable: any = this.prisma.Providers;
-  private allowedFields: string[] = ['rut','name','address','cellphone'];
+  private allowedFields: string[] = ['rut','name','address','cellphone','url_web'];
 
   constructor() {
     super();

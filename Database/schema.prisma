@@ -102,8 +102,8 @@ model Products {
 model SaleDetails {
   id Int @id @default(autoincrement())
 
-  Sales   Sales  @relation(fields: [sale_id], references: [sale_code]) // no se ve como campo, solo se registra la relación
-  sale_id String @map("sale_code") @db.VarChar(10)
+  Sales   Sales  @relation(fields: [sale_code], references: [sale_code]) // no se ve como campo, solo se registra la relación
+  sale_code String @map("sale_code")
 
   Products   Products @relation(fields: [product_id], references: [id]) // no se ve como campo, solo se registra la relación
   product_id Int

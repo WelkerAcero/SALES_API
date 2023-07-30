@@ -94,11 +94,11 @@ export class Model {
     }
   }
 
-  protected async update(id: number, newData: object) {
+  protected async update(id: number | string, newData: object, idName: string = 'id') {
     try {
       const result = await this.dbTable.update({
         where: {
-          id: id,
+          [idName]: id,
         },
         data: newData,
       });
@@ -112,11 +112,11 @@ export class Model {
     }
   }
 
-  protected async delete(id: number) {
+  protected async delete(id: number|string, idName:string = 'id') {
     try {
       return await this.dbTable.delete({
         where: {
-          id: id,
+          [idName]: id,
         },
       });
     } catch (error: any) {

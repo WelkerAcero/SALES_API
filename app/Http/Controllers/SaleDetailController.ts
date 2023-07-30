@@ -15,7 +15,7 @@ export class SaleDetailController extends SaleDetailsModel {
                 },
                 Products:
                 {
-                    include: { Categories: true, Branch_Offices: true, Providers: true}
+                    include: { Categories: true, Branch_Offices: true, Providers: true }
                 }
             }]).paginate(5));
         } catch (error: any) {
@@ -26,22 +26,25 @@ export class SaleDetailController extends SaleDetailsModel {
     storeSaleDetail = async (req: Request, res: Response): Promise<any> => {
         try {
             console.log('Sale Details input:', req.body);
-            const sale_id: number = req.body.sale_id;
+            const sale_code: string = req.body.sale_code;
             const product_id: number = req.body.product_id;
             const quantity: number = req.body.quantity;
 
             const product: any = await DB.table('products').where('id', product_id).get();
+            if (Object.values(product).length < 1) return res.json({ error: { message: 'El id del producto no se encuentra registrado, intente nuevamente' } });
+            
             console.log('Producto a comprar:', product);
             const prod_price = product[0].price;
-
             const sub_total = (quantity * prod_price).toFixed(2);
             const dataToStore = {
-                sale_id: sale_id,
+                sale_code: sale_code,
                 product_id: product_id,
                 quantity: quantity,
                 sub_total: parseFloat(sub_total),
             }
+            console.log('Sale detail to store:', dataToStore);
             return res.status(201).json(await this.create(dataToStore));
+            
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
@@ -50,9 +53,12 @@ export class SaleDetailController extends SaleDetailsModel {
     getSaleDetail = async (req: Request, res: Response): Promise<Response> => {
         try {
             const id = parseInt(req.params.id);
-            if (id) return res.json(await this.where('id', id).get()); 
-            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la 
-            siguiente manera: https://_URL_/52`} });
+            if (id) return res.json(await this.where('id', id).get());
+            return res.json({
+                error: {
+                    message: `No se encontro el id: Asegurate de establecer la busqueda de la 
+            siguiente manera: https://_URL_/52`}
+            });
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }

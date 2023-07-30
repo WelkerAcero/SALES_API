@@ -43,9 +43,9 @@ export class SaleController extends SaleModel {
             const toStore = {
                 customer_id: customer_id,
                 seller_id: seller_id,
-                sale_code: this.setBillCode(),
+                sale_code: await this.setBillCode(),
             } 
-            
+            console.log('Sale to store:', toStore);
             return res.status(201).json(await this.create(toStore));
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
@@ -54,10 +54,9 @@ export class SaleController extends SaleModel {
 
     getSale = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const id = parseInt(req.params.id);
-            if (id) return res.json(await this.where('id', id).get()); 
-            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la 
-            siguiente manera: https://_URL_/52`} });
+            const id = req.params.id.toString();
+            if (id) return res.json(await this.where('sale_code', id).get());
+            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la siguiente manera: https://_URL_/52`} });
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
@@ -76,10 +75,10 @@ export class SaleController extends SaleModel {
 
     updateSale = async (req: Request, res: Response) => {
         try {
-            const id = parseInt(req.params.id);
+            const id = req.params.id.toString();
             const newData: object = req.body;
             console.log("Datos capturados:", newData);
-            return res.status(200).json(await this.update(id, newData));
+            return res.status(200).json(await this.update(id, newData, 'sale_code'));
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
@@ -87,8 +86,8 @@ export class SaleController extends SaleModel {
 
     deleteSale = async (req: Request, res: Response): Promise<any> => {
         try {
-            const id = parseInt(req.params.id);
-            const process = await this.delete(id);
+            const id = req.params.id.toString();
+            const process = await this.delete(id,'sale_code');
             if (process.code === 'P2003') {
                 console.log('Error p2003 when delete');
                 return res.status(409).json({

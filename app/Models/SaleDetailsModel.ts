@@ -1,7 +1,7 @@
 import { Model } from "./Model";
 export class SaleDetailsModel extends Model {
   private targetDbTable: any = this.prisma.SaleDetails;
-  private allowedFields: string[] = ['sale_id', 'product_id','quantity','sub_total', 'bill_code'];
+  private allowedFields: string[] = ['sale_code', 'product_id','quantity','sub_total'];
 
   constructor() {
     super();
