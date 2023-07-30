@@ -41,9 +41,13 @@ npm install prisma@^5.0.0 --save-dev
 npx prisma init --datasource-provider mysql
 ================================================================
 El comando [npx prisma init --datasource-provider mysql]
-crea una carpeta Prisma, ESTA CARPETA DEBE ELIMINARSE. 
-Al clonar el repositorio nos provee de una Carpeta Database que
-contiene el schema.prisma con toda la modelación.
+crea una carpeta Prisma, ESTA CARPETA DEBE ELIMINARSE junto con
+su contenido dentro, ya que al clonar el repositorio nos provee 
+de una carpeta llamada Database que contiene el schema.prisma 
+con toda la modelación de la base de datos lista para migrar.
+
+También el comando creará un archivo .env en el que trabajaremos
+luego antes de migrar la base de datos.
 ================================================================
 
 MIGRAR BASE DE DATOS MEDIANTE PRISMA:
