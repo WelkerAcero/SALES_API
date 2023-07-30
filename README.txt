@@ -1,4 +1,6 @@
-Instalación de dependencias:
+Instalación de dependencias: 
+================================================================
+npm install || npm i
 ================================================================
 LISTA DE COMANDOS TYPESCRIPT Y DEPENDENCIAS PARA PROJECT
 ================================================================
@@ -18,13 +20,13 @@ Consecuentemente, TypeScript no reconoce los tipos de las
 clases de Express. Existe un paquete npm en concreto para que 
 TypeScript reconozca los tipos de Express.
 ================================================================
-npm install dotenv
+npm install dotenv@^16.0.3
 npm i @types/express -s
 npm i @types/node 
 npm i @types/mysql
 ================================================================
 Instalar Ngrok para exponer API Online: v4.3.3
-npm i ngrok 
+npm i ngrok@v4.3.3
 
 ================================================================
 ================================================================
@@ -33,11 +35,14 @@ Instalación de Nodemon (Opcional)
 npm i nodemon
 
 ================================================================
-Instalar el ORM de Prisma: 
+Instalar el ORM de Prisma: v ^5.0.0
 ================================================================
-npm install prisma --save-dev
+npm install prisma@^5.0.0 --save-dev
 npx prisma
 npx prisma init --datasource-provider mysql
+
+Crear una carpeta Database y dentro irá schema.prisma
+
 npx prisma migrate dev --name init --schema=./Database/schema.prisma   => migrate
 =================================================================
 Se Instala Módulo de Yargs para crear modelos y controladores 
@@ -54,7 +59,7 @@ script.
 1. Instalación del paquete cross-env como una dependencia de 
 desarrollo:
 =================================================================
-npm install --save-dev cross-env@7.0.3"
+npm install --save-dev cross-env@7.0.3
 =================================================================
 2. En el archivo package.json, se debe modificar el script "model" para 
 utilizar cross-env y la variable de entorno. 

@@ -7,6 +7,7 @@ export class Model {
   private _withRelation: any = {};
   private fields: string[];
   private dbTable: any;
+  private _dateTime:any = {};
 
   protected prisma: any = PRISMA
   protected relation: string[] | string = '';
@@ -17,15 +18,25 @@ export class Model {
   }
 
   where(columnName: string, value: string | number | boolean): Model {
+
+    if (columnName === 'createdAt' && typeof(value) == 'string') {
+      const formattedStartDate = value.slice(0, 10)+'T'+'00:00:00.000Z';
+      const formattedEndDate = value.slice(0, 10)+'T'+'23:59:59.000Z';
+      this._dateTime = {
+          gte: formattedStartDate,
+          lte: formattedEndDate
+      }
+    }
     this._whereCondition = {
       ...this._whereCondition,
-      [columnName]: value
+      [columnName]: Object.values(this._dateTime).length > 0 ? this._dateTime : value
     }
     return this;
   }
 
   protected with(tableRelation: string[] | any): Model {
     this._whereCondition = {};
+    
     tableRelation.forEach((element: any) => {
       if (typeof element === 'string') {
         this._withRelation[element] = true;
@@ -33,6 +44,7 @@ export class Model {
         Object.assign(this._withRelation, element);
       }
     });
+    console.log('relation:', this._withRelation);
     return this;
   }
 
@@ -49,6 +61,8 @@ export class Model {
         options.skip = (page - 1) * pageSize;
         options.take = pageSize;
       }
+
+      console.log('Todo options:', options);
 
       return await this.dbTable.findMany(options);
 

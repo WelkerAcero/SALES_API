@@ -5,7 +5,6 @@ import { DB } from "../../helpers/DB";
 dotenv.config();
 
 export class SaleController extends SaleModel {
-    
 
     setBillCode = async (): Promise<string> => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -13,17 +12,17 @@ export class SaleController extends SaleModel {
         let code = '';
         let repeat = false;
         do {
-          code = '';
-          for (let i = 0; i < codeLength; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            code += characters[randomIndex];
-          }
-        
-          const verifyExistence: any = await DB.table('Sales').where('sale_code', code).get();
-          if (Object.values(verifyExistence).length > 0) repeat = true;
-          
+            code = '';
+            for (let i = 0; i < codeLength; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                code += characters[randomIndex];
+            }
+
+            const verifyExistence: any = await DB.table('Sales').where('sale_code', code).get();
+            if (Object.values(verifyExistence).length > 0) repeat = true;
+
         } while (repeat);
-        
+
         return code;
     }
 
@@ -39,12 +38,12 @@ export class SaleController extends SaleModel {
         try {
             const customer_id = req.body.customer_id;
             const seller_id = req.body.seller_id;
-            
+
             const toStore = {
                 customer_id: customer_id,
                 seller_id: seller_id,
                 sale_code: await this.setBillCode(),
-            } 
+            }
             console.log('Sale to store:', toStore);
             return res.status(201).json(await this.create(toStore));
         } catch (error: any) {
@@ -56,18 +55,19 @@ export class SaleController extends SaleModel {
         try {
             const id = req.params.id.toString();
             if (id) return res.json(await this.where('sale_code', id).get());
-            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la siguiente manera: https://_URL_/52`} });
+            return res.json({ error: { message: `No se encontro el id: Asegurate de establecer la busqueda de la siguiente manera: https://_URL_/52` } });
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
     };
 
-    
     getSaleByDate = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const date = req.params.date;
-            console.log('Params:', req.params.date);
-            return res.json(await this.where('createdAt', date).get());
+            const date: string = req.params.date;
+            return res.json(await this.with(['Customers','Sellers',
+                { Sales_Details: { include: { Products: {include:{ Branch_Offices:true } } } }}
+            ]
+            ).where('createdAt', date).get());
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
@@ -87,15 +87,15 @@ export class SaleController extends SaleModel {
     deleteSale = async (req: Request, res: Response): Promise<any> => {
         try {
             const id = req.params.id.toString();
-            const process = await this.delete(id,'sale_code');
+            const process = await this.delete(id, 'sale_code');
             if (process.code === 'P2003') {
                 console.log('Error p2003 when delete');
                 return res.status(409).json({
-                        error: {
-                            message: 'El registro no puede ser eliminado ya que su referencia esta siendo usada en otro registro'
-                        }
-                    });
-              
+                    error: {
+                        message: 'El registro no puede ser eliminado ya que su referencia esta siendo usada en otro registro'
+                    }
+                });
+
             }
             return res.status(204).json({ message: 'Registro eliminado exitosamente' });
         } catch (error: any) {

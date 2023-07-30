@@ -30,9 +30,9 @@ export class SaleDetailController extends SaleDetailsModel {
             const product_id: number = req.body.product_id;
             const quantity: number = req.body.quantity;
 
-            const product: any = await DB.table('products').where('id', product_id).get();
+            const product: any = await DB.table('Products').where('id', product_id).get();
             if (Object.values(product).length < 1) return res.json({ error: { message: 'El id del producto no se encuentra registrado, intente nuevamente' } });
-            
+
             console.log('Producto a comprar:', product);
             const prod_price = product[0].price;
             const sub_total = (quantity * prod_price).toFixed(2);
@@ -44,7 +44,7 @@ export class SaleDetailController extends SaleDetailsModel {
             }
             console.log('Sale detail to store:', dataToStore);
             return res.status(201).json(await this.create(dataToStore));
-            
+
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
@@ -52,13 +52,23 @@ export class SaleDetailController extends SaleDetailsModel {
 
     getSaleDetail = async (req: Request, res: Response): Promise<Response> => {
         try {
-            const id = parseInt(req.params.id);
-            if (id) return res.json(await this.where('id', id).get());
+            const id = req.params.id.toString();
+            if (id){
+                return res.json(await this.with([
+                    { 
+                        Sales: {
+                            include:  { Sellers: true, Customers: true } 
+                        } 
+                    }
+                ]).where('sale_code', id).get());
+            } 
+
             return res.json({
                 error: {
                     message: `No se encontro el id: Asegurate de establecer la busqueda de la 
             siguiente manera: https://_URL_/52`}
             });
+
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }

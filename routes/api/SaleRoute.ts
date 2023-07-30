@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/sales", obj.getSales);
 router.get("/sale/:id", obj.getSale);
-router.get("/sale/:date", obj.getSaleByDate);
+router.get("/sale_by_date/:date", obj.getSaleByDate);
 router.post("/sale", obj.storeSale);
 router.put("/sale/:id", obj.updateSale);
 router.delete("/sale/:id", obj.deleteSale);

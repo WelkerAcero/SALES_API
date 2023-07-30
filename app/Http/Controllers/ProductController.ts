@@ -6,7 +6,7 @@ dotenv.config();
 export class ProductController extends ProductModel {
     getProducts = async (req: Request, res: Response): Promise<Response> => {
         try {
-            return res.status(200).json(await this.with(['Providers', 'Categories', 'Branch_Offices']).paginate(10));
+            return res.status(200).json(await this.with(['Providers', 'Categories', 'Branch_Offices']).get());
         } catch (error: any) {
             return res.json({ error: { message: 'El servidor no puede devolver una respuesta debido a un error del cliente' } });
         }
