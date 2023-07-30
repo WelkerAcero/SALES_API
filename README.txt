@@ -47,7 +47,7 @@ contiene el schema.prisma con toda la modelación.
 ================================================================
 
 MIGRAR BASE DE DATOS MEDIANTE PRISMA:
-      1. Se debe tener la base de datos creada con el nombre sales_api.
+      1. Se debe tener la base de datos creada con el nombre sales_api. Cotejamiento por defecto
       2. El archivo .env debe contener: DATABASE_URL="mysql://root:CLAVE_DE_LA_DB@localhost:3306/sales_api"
       3. correr el comando: npm run migrate
 
